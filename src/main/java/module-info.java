@@ -14,4 +14,5 @@ module com.example.mysimplechat {
     exports com.example.mysimplechat;
     exports com.example.security;
     exports com.example.database;
+    exports com.example.validation;
 }

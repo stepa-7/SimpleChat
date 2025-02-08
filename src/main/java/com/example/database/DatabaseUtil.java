@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import com.example.mysimplechat.*;
+import javafx.scene.control.Alert;
+
 import java.sql.SQLException;
 
 public class DatabaseUtil {
@@ -12,7 +14,6 @@ public class DatabaseUtil {
     private static final String USER = "chat_client";
     private static final String PASSWORD = "client_password";
 
-    // Получение соединения с базой данных
     public static Connection getConnection() throws Exception {
         try {
             Class.forName("org.postgresql.Driver");
@@ -23,24 +24,27 @@ public class DatabaseUtil {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace(); // Выведет полный стек ошибок
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Server connection error");
+            alert.setContentText("Please check your internet connection");
+            alert.setHeaderText(null);
+            alert.show();
+//            e.printStackTrace(); // Выведет полный стек ошибок
         }
         return connection;
     }
 
-    // Сохранение нового пользователя с хешированным паролем
-    public static void saveUser(String username, String login, String hashedPassword) throws Exception {
+    public static int saveUser(String username, String login, String hashedPassword) throws Exception {
         String query = "INSERT INTO users (username, login, password) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             stmt.setString(2, login);
             stmt.setString(3, hashedPassword);
-            stmt.executeUpdate();
+            return stmt.executeUpdate();
         }
     }
 
-    // Получение хеша пароля для пользователя (для аутентификации)
     public static String getPasswordHash(String login) throws Exception {
         String query = "SELECT password FROM users WHERE login = ?";
         try (Connection conn = getConnection();
