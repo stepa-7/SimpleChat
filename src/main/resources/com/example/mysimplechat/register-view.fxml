@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mysimplechat.RegisterController">
+    <children>
+        <VBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TextField fx:id="usernameLogin" promptText="Username" />
+            <TextField fx:id="passwordLogin" promptText="Password" />
+            <Button fx:id="registerButton" onMouseClicked="#onRegisterClick" alignment="CENTER" prefHeight="26.0" prefWidth="81.0" text="Register" />
+            <Label fx:id="loginLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" onMouseClicked="#onLoginClick" text="Login" textFill="#0645ad">
+            </Label>
+            <padding>
+                <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -10,8 +10,8 @@ import java.io.IOException;
 public class SimpleChat extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 500, 300);
+        FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Chat");
         stage.setScene(scene);
         stage.show();

@@ -6,7 +6,12 @@ module com.example.mysimplechat {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
+    requires org.postgresql.jdbc;
+    requires jbcrypt;
 
     opens com.example.mysimplechat to javafx.fxml;
     exports com.example.mysimplechat;
+    exports com.example.security;
+    exports com.example.database;
 }
