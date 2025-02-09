@@ -7,11 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import java.util.regex.Pattern;
 
@@ -30,15 +27,23 @@ public class RegisterController {
     @FXML
     private TextField passwordRegister;
 
+    public TextField getLoginRegister() {
+        return loginRegister;
+    }
+    public TextField getPasswordRegister() {
+        return passwordRegister;
+    }
+
     private boolean isRegistered = false;
 
     @FXML
     public void onLoginClick(MouseEvent mouseEvent) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        Stage stage = (Stage) loginLabel.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+//        FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("login-view.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load());
+//        Stage stage = (Stage) loginLabel.getScene().getWindow();
+//        stage.setScene(scene);
+//        stage.show();
+        switchSceneOnLogin(loginRegister.getText(), passwordRegister.getText());
     }
 
     @FXML
@@ -55,7 +60,7 @@ public class RegisterController {
             isRegistered = true;
             alert.setOnHidden(event -> {
                 try {
-                    switchScene(login, password);
+                    switchSceneOnLogin(login, password);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -65,16 +70,16 @@ public class RegisterController {
         }
     }
 
-    private void switchScene(String login, String password) throws IOException {
+    private void switchSceneOnLogin(String login, String password) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = (Stage) loginLabel.getScene().getWindow();
         LoginController loginController = fxmlLoader.getController();
         stage.setScene(scene);
-        if (isRegistered) {
-            loginController.getLoginLogin().setText(login);
-            loginController.getPasswordLogin().setText(password);
-        }
+//        if (isRegistered) {
+        loginController.getLoginLogin().setText(login);
+        loginController.getPasswordLogin().setText(password);
+//        }
         stage.show();
     }
 }

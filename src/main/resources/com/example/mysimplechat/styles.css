@@ -1,0 +1,61 @@
+/* Общий стиль для всей сцены */
+.root {
+    -fx-background-color: #f4f4f4;
+    -fx-font-family: "Arial";
+}
+
+/* Стиль для кнопок */
+.button {
+    -fx-background-color: #4CAF50; /* Зеленый */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #45a049; /* Темно-зеленый при наведении */
+}
+
+/* Стиль для текстовых полей */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Стиль для списка чатов */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+}
+
+/* Стиль для текстовой области (история чата) */
+.text-area {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+/* Стиль для меток (ник, заголовки) */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+/* Стиль для ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: white;
+}

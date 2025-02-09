@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.mysimplechat.ChatController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <!-- Left panel -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white; -fx-border-radius: 5px;">
+            <!-- Username and exit button -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-size: 18px; -fx-text-fill: #333;" text="Ваш ник" />
+                <Button style="-fx-background-color: #ff4444; -fx-text-fill: white;" text="Exit" />
+            </HBox>
 
-</AnchorPane>
+            <!-- Список чатов с прокруткой -->
+            <ScrollPane style="-fx-background-color: transparent;" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                <ListView style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
+            </ScrollPane>
+
+            <!-- Кнопка добавления нового чата -->
+            <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add a chat" />
+        </VBox>
+    </left>
+
+    <!-- Правая панель (текущий чат) -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white; -fx-border-radius: 5px;">
+            <!-- Имя текущего собеседника -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label style="-fx-font-size: 18px; -fx-text-fill: #333;" text="Current chat:" />
+                <Label style="-fx-font-size: 18px; -fx-text-fill: #117481;" text="\@yoagds" />
+            </HBox>
+
+            <!-- История сообщений -->
+
+            <!-- Поле для ввода сообщения -->
+            <ScrollPane style="-fx-background-color: transparent;" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS" >
+                <TextArea editable="false" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" HBox.hgrow="ALWAYS" />
+            </ScrollPane>
+            <HBox spacing="10">
+                <TextField promptText="Enter your message..." style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px; " HBox.hgrow="ALWAYS"/>
+                <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Send" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

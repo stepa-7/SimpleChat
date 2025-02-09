@@ -6,10 +6,7 @@ import com.example.validation.UserValidator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -37,7 +34,10 @@ public class LoginController {
         FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("register-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = (Stage) registerLabel.getScene().getWindow();
+        RegisterController registerController = fxmlLoader.getController();
         stage.setScene(scene);
+        registerController.getLoginRegister().setText(loginLogin.getText());
+        registerController.getPasswordRegister().setText(passwordLogin.getText());
         stage.show();
     }
 
@@ -46,12 +46,26 @@ public class LoginController {
         String login = loginLogin.getText();
         String password = passwordLogin.getText();
         if (!UserValidator.checkCorrectness(login, password)) { return; }
-        if (SecurityUtil.checkPassword(password, DatabaseUtil.getPasswordHash(login))) {
-            FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("chat-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = (Stage) registerLabel.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+
+        String hashedPassword = DatabaseUtil.getPasswordHash(login);
+        if (hashedPassword != null) {
+            if (SecurityUtil.checkPassword(password, hashedPassword)) {
+                FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("chat-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage stage = (Stage) registerLabel.getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Login or password is incorrect!");
+                alert.show();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("User not found!");
+            alert.show();
         }
     }
 }
