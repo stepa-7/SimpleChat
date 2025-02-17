@@ -3,23 +3,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mysimplechat.chat.ChatController">
     <!-- Left panel -->
     <left>
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white; -fx-border-radius: 5px;">
             <!-- Username and exit button -->
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-size: 18px; -fx-text-fill: #333;" text="Ваш ник" />
+                <Label fx:id="usernameLabel" style="-fx-font-size: 18px; -fx-text-fill: #333;" text="Ваш ник" />
                 <Button style="-fx-background-color: #ff4444; -fx-text-fill: white;" text="Exit" />
             </HBox>
 
             <!-- Список чатов с прокруткой -->
             <ScrollPane style="-fx-background-color: transparent;" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
-                <ListView style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
+                <ListView onMouseClicked="#onChatClick" fx:id="usersListView" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
             </ScrollPane>
 
             <!-- Кнопка добавления нового чата -->
-            <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add a chat" />
+            <Button onMouseClicked="#onAddChatClick" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Add a chat" />
         </VBox>
     </left>
 
@@ -27,20 +27,20 @@
     <center>
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white; -fx-border-radius: 5px;">
             <!-- Имя текущего собеседника -->
-            <HBox alignment="CENTER_LEFT" spacing="8">
+            <HBox alignment="CENTER_LEFT" spacing="6">
                 <Label style="-fx-font-size: 18px; -fx-text-fill: #333;" text="Current chat:" />
-                <Label style="-fx-font-size: 18px; -fx-text-fill: #117481;" text="\@yoagds" />
+                <Label fx:id="chatterUsernameLabel" style="-fx-font-size: 18px; -fx-text-fill: #117481;" text="not selected" />
             </HBox>
 
             <!-- История сообщений -->
 
             <!-- Поле для ввода сообщения -->
             <ScrollPane style="-fx-background-color: transparent;" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS" >
-                <TextArea editable="false" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" HBox.hgrow="ALWAYS" />
+                <TextArea fx:id="messagesTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" HBox.hgrow="ALWAYS" />
             </ScrollPane>
             <HBox spacing="10">
-                <TextField promptText="Enter your message..." style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px; " HBox.hgrow="ALWAYS"/>
-                <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Send" />
+                <TextField fx:id="typedMessageTextField" promptText="Enter your message..." style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px; " HBox.hgrow="ALWAYS"/>
+                <Button onMouseClicked="#onSendClick" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Send" />
             </HBox>
         </VBox>
     </center>

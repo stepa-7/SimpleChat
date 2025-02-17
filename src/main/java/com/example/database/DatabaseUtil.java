@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import com.example.mysimplechat.*;
+
 import javafx.scene.control.Alert;
 
 import java.sql.SQLException;
 
 public class DatabaseUtil {
-    private static final String URL = "jdbc:postgresql://192.168.28.124:5432/chatDB";
+//    private static final String URL = "jdbc:postgresql://192.168.28.124:5432/chatDB";
+    private static final String URL = "jdbc:postgresql://192.168.1.5:5432/chatDB";
     private static final String USER = "chat_client";
     private static final String PASSWORD = "client_password";
 
@@ -58,4 +59,42 @@ public class DatabaseUtil {
         }
         return null;
     }
+
+    public static String getUsername(String login) throws Exception {
+        String query = "SELECT username FROM users WHERE login = ?";
+        try (Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, login);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+        }
+        return null;
+    }
+
+    public static boolean isUsernameExists(String username) throws Exception {
+        String query = "SELECT login FROM users WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    public static boolean isLoginExists(String login) throws Exception {
+        String query = "SELECT login FROM users WHERE login = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, login);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+
 }

@@ -1,5 +1,5 @@
 import com.example.database.DatabaseUtil;
-import com.example.mysimplechat.*;
+import com.example.mysimplechat.chat.*;
 
 import com.example.security.SecurityUtil;
 import org.testng.annotations.Test;

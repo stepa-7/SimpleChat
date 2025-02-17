@@ -1,6 +1,8 @@
-package com.example.mysimplechat;
+package com.example.mysimplechat.authorization;
 
 import com.example.database.DatabaseUtil;
+import com.example.mysimplechat.chat.ChatController;
+import com.example.mysimplechat.chat.SimpleChat;
 import com.example.security.SecurityUtil;
 import com.example.validation.UserValidator;
 import javafx.fxml.FXML;
@@ -53,8 +55,12 @@ public class LoginController {
                 FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("chat-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 Stage stage = (Stage) registerLabel.getScene().getWindow();
+                ChatController chatController = fxmlLoader.getController();
+                chatController.getUsernameLabel().setText(DatabaseUtil.getUsername(login));
                 stage.setScene(scene);
                 stage.show();
+
+                chatController.connectToServer(DatabaseUtil.getUsername(login));
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");

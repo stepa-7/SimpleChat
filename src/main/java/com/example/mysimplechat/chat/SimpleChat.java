@@ -1,11 +1,13 @@
-package com.example.mysimplechat;
+package com.example.mysimplechat.chat;
 
+import com.example.mysimplechat.chat.client.ChatStompClient;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class SimpleChat extends Application {
     @Override
@@ -17,7 +19,10 @@ public class SimpleChat extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         launch();
+
+//        ChatStompClient chatStompClient = new ChatStompClient("stepa177");
+//        chatStompClient.sendMessage(new ChatMessage("stepa177", "Hello world", ""));
     }
 }
