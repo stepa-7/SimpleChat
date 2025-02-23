@@ -1,7 +1,8 @@
 package com.example.mysimplechat.chat;
 
 import com.example.database.DatabaseUtil;
-import com.example.mysimplechat.chat.client.ChatStompClient;
+import com.example.mysimplechat.chat.chatroom.ChatRoom;
+import com.example.mysimplechat.chat.websockets.client.ChatStompClient;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -31,6 +32,14 @@ public class ChatController {
 
     public Label getUsernameLabel() {
         return usernameLabel;
+    }
+
+    public ListView getUsersListView() {
+        return usersListView;
+    }
+
+    public Label getChatterUsernameLabel() {
+        return chatterUsernameLabel;
     }
 
     public void onAddChatClick(MouseEvent mouseEvent) throws Exception {
@@ -93,13 +102,24 @@ public class ChatController {
     public void onChatClick(MouseEvent mouseEvent) throws ExecutionException, InterruptedException {
 //        chatClient = new ChatStompClient(usernameLabel.getText());
         chatterUsernameLabel.setText(usersListView.getSelectionModel().getSelectedItem().toString()); // need to handle nullpointer
-
+        messagesTextArea.clear();
     }
 
     public void onSendClick(MouseEvent mouseEvent) throws ExecutionException, InterruptedException {
 //        chatClient = new ChatStompClient(chatterUsernameLabel.getText());
         String message = typedMessageTextField.getText();
-        chatClient.sendMessage(new ChatMessage(usernameLabel.getText(), message, chatterUsernameLabel.getText())); // IllegalStateException connection closed
+        if (message.isEmpty()) {
+            return;
+        }
+
+        String chatterId = chatterUsernameLabel.getText();
+        ChatMessage chatMessage = new ChatMessage(usernameLabel.getText(), message, chatterId);
+        if (chatterId.equals("General chat (With ALL users)")) {
+            chatClient.sendMessage(chatMessage); // IllegalStateException connection closed
+        } else {
+            chatClient.sendPrivateMessage(chatMessage);
+            updateMessagesTextArea(chatMessage);
+        }
         typedMessageTextField.clear();
     }
 
@@ -108,6 +128,12 @@ public class ChatController {
     }
 
     public void updateMessagesTextArea (ChatMessage message) {
-        messagesTextArea.appendText(message.getSender() + '\n' + message.getMessage() + '\n' + '\n');
+        String chatterId = chatterUsernameLabel.getText();
+        String myId = usernameLabel.getText();
+        if (message.getSenderId().equals(chatterId)
+//                || (message.getReceiverId().equals(chatterId) && message.getSenderId().equals(myId))
+                || (message.getReceiverId().equals(chatterId))) {
+            messagesTextArea.appendText(message.getSenderId() + '\n' + message.getMessage() + '\n' + '\n');
+        }
     }
 }

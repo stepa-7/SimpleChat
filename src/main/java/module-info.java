@@ -6,7 +6,6 @@ module com.example.mysimplechat {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
-    requires java.sql;
     requires org.postgresql.jdbc;
     requires jbcrypt;
     requires spring.websocket;
@@ -17,6 +16,11 @@ module com.example.mysimplechat {
     requires spring.boot;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires spring.data.jpa;
+    requires spring.web;
+    requires org.hibernate.orm.core;
+    requires org.apache.tomcat.embed.core;
+    requires jakarta.persistence;
 
 //    opens com.example.mysimplechat. to javafx.fxml;
     exports com.example.security;
@@ -24,12 +28,20 @@ module com.example.mysimplechat {
     exports com.example.validation;
     exports com.example.mysimplechat.authorization;
     exports com.example.mysimplechat.chat;
-    exports com.example.mysimplechat.chat.client;
-    opens com.example.mysimplechat.chat to javafx.fxml, spring.core, com.fasterxml.jackson.databind;
+    exports com.example.mysimplechat.chat.websockets.client;
+    exports com.example.mysimplechat.chat.websockets.config;
+    exports com.example.mysimplechat.chat.websockets;
+    exports com.example.mysimplechat.chat.chatroom;
+
+
+    opens com.example.mysimplechat.chat to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
+            spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
     opens com.example.mysimplechat.authorization to javafx.fxml;
-    opens com.example.mysimplechat.chat.client to javafx.fxml;
-    exports com.example.mysimplechat.config;
-    opens com.example.mysimplechat.config to com.fasterxml.jackson.databind, javafx.fxml, spring.core;
+    opens com.example.mysimplechat.chat.websockets.client to javafx.fxml;
+    opens com.example.mysimplechat.chat.websockets.config to com.fasterxml.jackson.databind, javafx.fxml, spring.core;
+    opens com.example.mysimplechat.chat.websockets to com.fasterxml.jackson.databind, javafx.fxml, spring.core;
+    opens com.example.mysimplechat.chat.chatroom to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
+            spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
 
 //    opens com.example.mysimplechat.chat to javafx.fxml, spring.core, spring.beans, spring.context, spring.messaging;
 

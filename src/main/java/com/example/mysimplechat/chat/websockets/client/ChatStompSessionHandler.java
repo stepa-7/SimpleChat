@@ -1,4 +1,4 @@
-package com.example.mysimplechat.chat.client;
+package com.example.mysimplechat.chat.websockets.client;
 
 import com.example.mysimplechat.chat.ChatController;
 import com.example.mysimplechat.chat.ChatMessage;
@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import java.lang.reflect.Type;
 
 public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
-    private String username;
+    private final String username;
     private final ChatController chatController;
 
 
@@ -23,7 +23,6 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         System.out.println("Client connected");
         session.subscribe("/topic/messages", new StompFrameHandler() {
-//        session.subscribe("/user/queue/messages", new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return ChatMessage.class; // Convert incoming json data into a message object
@@ -34,13 +33,31 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
                 if (payload instanceof ChatMessage) {
                     ChatMessage message = (ChatMessage) payload;
                     chatController.updateMessagesTextArea(message);
-                    System.out.println("Received message: " + message.getSender() + ": " + message.getMessage());
+                    System.out.println("Received message: " + message.getSenderId() + ": " + message.getMessage());
                 } else {
                     System.out.println("Received unexpected message type: " + payload.getClass());
                 }
             }
         });
+        session.subscribe("/user/queue/messages", new StompFrameHandler() {
+                    @Override
+                    public Type getPayloadType(StompHeaders headers) {
+                        return ChatMessage.class;
+                    }
+
+                    @Override
+                    public void handleFrame(StompHeaders headers, Object payload) {
+                        if (payload instanceof ChatMessage) {
+                            ChatMessage message = (ChatMessage) payload;
+                            chatController.updateMessagesTextArea(message);
+                            System.out.println("Received message: " + message.getSenderId() + ": " + message.getMessage());
+                        } else {
+                            System.out.println("Received unexpected message type: " + payload.getClass());
+                        }
+                    }
+                });
         System.out.println("Client subscribed to /topic/messages");
+        System.out.println("Client subscribed to /user/queue/messages");
 //        System.out.println("Client subscribed to /user/queue/messages");
     }
 

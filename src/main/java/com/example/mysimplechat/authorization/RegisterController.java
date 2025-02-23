@@ -33,8 +33,6 @@ public class RegisterController {
         return passwordRegister;
     }
 
-    private boolean isRegistered = false;
-
     @FXML
     public void onLoginClick(MouseEvent mouseEvent) throws IOException {
         switchSceneOnLogin(loginRegister.getText(), passwordRegister.getText());
@@ -65,7 +63,6 @@ public class RegisterController {
             alert.setTitle("Success");
             alert.setHeaderText("Registration is completed!");
             alert.setContentText("Please log in with the same data.");
-            isRegistered = true;
             alert.setOnHidden(event -> {
                 try {
                     switchSceneOnLogin(login, password);
@@ -78,7 +75,7 @@ public class RegisterController {
         }
     }
 
-    private void switchSceneOnLogin(String login, String password) throws IOException {
+    public void switchSceneOnLogin(String login, String password) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = (Stage) loginLabel.getScene().getWindow();

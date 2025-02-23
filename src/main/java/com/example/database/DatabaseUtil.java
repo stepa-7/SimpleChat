@@ -5,7 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.example.mysimplechat.authorization.RegisterController;
+import com.example.mysimplechat.chat.SimpleChat;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
@@ -30,6 +35,10 @@ public class DatabaseUtil {
             alert.setContentText("Please check your internet connection");
             alert.setHeaderText(null);
             alert.show();
+            FXMLLoader fxmlLoader = new FXMLLoader(SimpleChat.class.getResource("register-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            RegisterController registerController = fxmlLoader.getController();
+            registerController.switchSceneOnLogin("", "");
 //            e.printStackTrace(); // Выведет полный стек ошибок
         }
         return connection;
@@ -97,4 +106,26 @@ public class DatabaseUtil {
     }
 
 
+    public static void sendHeartbeat(String login) {
+        String query = "UPDATE users SET last_ping = now() WHERE login = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, login);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setIsConnected(String login, boolean isConnected) {
+        String query = "UPDATE users SET is_connected = ? WHERE login = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setBoolean(1, isConnected);
+            stmt.setString(2, login);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
