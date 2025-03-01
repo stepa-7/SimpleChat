@@ -83,6 +83,20 @@ public class DatabaseUtil {
         return null;
     }
 
+    public static String getLogin(String username) throws Exception {
+        String query = "SELECT login FROM users WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    return rs.getString("login");
+                }
+            }
+        }
+        return null;
+    }
+
     public static boolean isUsernameExists(String username) throws Exception {
         String query = "SELECT login FROM users WHERE username = ?";
         try (Connection conn = getConnection();

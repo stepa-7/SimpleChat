@@ -1,4 +1,4 @@
-package com.example.mysimplechat.chat;
+package com.example.mysimplechat.chat.chatmessage;
 
 import com.example.mysimplechat.chat.chatroom.ChatRoom;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -35,10 +35,12 @@ public class ChatMessage {
     public ChatMessage(
             @JsonProperty("senderId") String senderId,
             @JsonProperty("message") String message,
-            @JsonProperty("receiverId") String receiverId) {
+            @JsonProperty("receiverId") String receiverId,
+            @JsonProperty("timestamp") Date timestamp) {
         this.senderId = senderId;
         this.message = message;
         this.receiverId = receiverId;
+        this.timestamp = timestamp;
     }
 
     public ChatMessage() {}

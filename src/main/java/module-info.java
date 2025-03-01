@@ -21,6 +21,11 @@ module com.example.mysimplechat {
     requires org.hibernate.orm.core;
     requires org.apache.tomcat.embed.core;
     requires jakarta.persistence;
+    requires okhttp3;
+    requires annotations;
+    requires spring.data.commons;
+    requires spring.tx;
+    requires spring.orm;
 
 //    opens com.example.mysimplechat. to javafx.fxml;
     exports com.example.security;
@@ -32,6 +37,7 @@ module com.example.mysimplechat {
     exports com.example.mysimplechat.chat.websockets.config;
     exports com.example.mysimplechat.chat.websockets;
     exports com.example.mysimplechat.chat.chatroom;
+    exports com.example.mysimplechat.chat.chatmessage;
 
 
     opens com.example.mysimplechat.chat to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
@@ -41,6 +47,8 @@ module com.example.mysimplechat {
     opens com.example.mysimplechat.chat.websockets.config to com.fasterxml.jackson.databind, javafx.fxml, spring.core;
     opens com.example.mysimplechat.chat.websockets to com.fasterxml.jackson.databind, javafx.fxml, spring.core;
     opens com.example.mysimplechat.chat.chatroom to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
+            spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
+    opens com.example.mysimplechat.chat.chatmessage to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
             spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
 
 //    opens com.example.mysimplechat.chat to javafx.fxml, spring.core, spring.beans, spring.context, spring.messaging;

@@ -4,30 +4,24 @@ import com.example.database.ConnectionChecker;
 import com.example.database.DatabaseUtil;
 import com.example.mysimplechat.chat.ChatController;
 import com.example.mysimplechat.chat.SimpleChat;
-import com.example.mysimplechat.chat.chatroom.ChatRoomService;
+import com.example.mysimplechat.chat.chatroom.ChatRoom;
 import com.example.security.SecurityUtil;
 import com.example.validation.UserValidator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.List;
 
-//@Controller
 public class LoginController {
-//    private final ChatRoomService chatRoomService;
-
-//    @Autowired
-//    public LoginController(ChatRoomService chatRoomService) {
-//        this.chatRoomService = chatRoomService;
-//    }
-
     @FXML
     private Label registerLabel;
     @FXML
@@ -85,19 +79,21 @@ public class LoginController {
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = (Stage) registerLabel.getScene().getWindow();
         ChatController chatController = fxmlLoader.getController();
-        chatController.getUsernameLabel().setText(DatabaseUtil.getUsername(login));
-        chatController.getUsersListView().getItems().add("General chat (With ALL users)");
-        chatController.getUsersListView().getSelectionModel().select("General chat (With ALL users)");
+        String myUsername = DatabaseUtil.getUsername(login);
+        chatController.getUsernameLabel().setText(myUsername);
+        ListView usersListView = chatController.getUsersListView();
+        usersListView.getItems().add("General chat (With ALL users)");
+        usersListView.getSelectionModel().select("General chat (With ALL users)");
         chatController.getChatterUsernameLabel().setText("General chat (With ALL users)");
 
         DatabaseUtil.setIsConnected(login, true);
         ConnectionChecker.startConnectionChecker(login);
 
-//        chatRoomService.getRoomList();
+        chatController.updateUsersListView(myUsername);
 
         stage.setScene(scene);
         stage.show();
 
-        chatController.connectToServer(DatabaseUtil.getUsername(login));
+        chatController.connectToServer(myUsername);
     }
 }

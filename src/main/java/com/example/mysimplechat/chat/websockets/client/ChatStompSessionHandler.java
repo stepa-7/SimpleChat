@@ -1,7 +1,7 @@
 package com.example.mysimplechat.chat.websockets.client;
 
 import com.example.mysimplechat.chat.ChatController;
-import com.example.mysimplechat.chat.ChatMessage;
+import com.example.mysimplechat.chat.chatmessage.ChatMessage;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;

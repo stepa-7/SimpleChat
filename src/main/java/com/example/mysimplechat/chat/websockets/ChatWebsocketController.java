@@ -1,15 +1,18 @@
 package com.example.mysimplechat.chat.websockets;
 
-import com.example.mysimplechat.chat.ChatMessage;
-import com.example.mysimplechat.chat.ChatMessageService;
+import com.example.mysimplechat.chat.ChatController;
+import com.example.mysimplechat.chat.ChatService;
+import com.example.mysimplechat.chat.chatmessage.ChatMessage;
+import com.example.mysimplechat.chat.chatmessage.ChatMessageService;
+import com.example.mysimplechat.chat.chatroom.ChatRoom;
+import com.example.mysimplechat.chat.chatroom.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,20 +20,38 @@ import java.util.List;
 public class ChatWebsocketController {
     private final SimpMessagingTemplate messagingTemplate; // Websocket use this to send messages to users
     private final ChatMessageService chatMessageService;
+    private final ChatRoomService chatRoomService;
+    private final ChatService chatService;
 
-    @Autowired
-    public ChatWebsocketController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService) {
-        this.messagingTemplate = messagingTemplate;
-        this.chatMessageService = chatMessageService;
+
+    @GetMapping("/chat-rooms")
+    @ResponseBody
+    public List<ChatRoom> getChatRooms() {
+        return chatRoomService.getRoomList();
     }
 
-//    @GetMapping("/messages/{senderId}/{receiverId}")
-//    public ResponseEntity<List<ChatMessage>> findChatMessages(
-//            @PathVariable String senderId,
-//            @PathVariable String receiverId
-//    ) {
-//        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, receiverId));
-//    }
+    @PostMapping("/delete-room")
+    @ResponseBody
+    public ResponseEntity<String> deleteRoom (@RequestParam String receiverId, @RequestParam String senderId) {
+        chatRoomService.deleteRoomByReceiverId(receiverId, senderId);
+        return ResponseEntity.ok("Chat deleted successfully");
+    }
+
+    @Autowired
+    public ChatWebsocketController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService, ChatRoomService chatRoomService, ChatService chatService) {
+        this.messagingTemplate = messagingTemplate;
+        this.chatMessageService = chatMessageService;
+        this.chatRoomService = chatRoomService;
+        this.chatService = chatService;
+    }
+
+    @GetMapping("/messages/{senderId}/{receiverId}")
+    public ResponseEntity<List<ChatMessage>> findChatMessages(
+            @PathVariable String senderId,
+            @PathVariable String receiverId
+    ) {
+        return ResponseEntity.ok(chatService.findChatMessages(senderId, receiverId, true));
+    }
 
     // User sends a message to the server to /app/private-message
     @MessageMapping("/private-message")
