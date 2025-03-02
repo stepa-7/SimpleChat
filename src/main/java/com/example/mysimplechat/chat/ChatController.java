@@ -73,7 +73,7 @@ public class ChatController {
 
         // Дата и время
         if (message.getTimestamp() != null) {
-            Label dateLabel = createDateLabel(message.getTimestamp());
+            Label dateLabel = createDateLabel(message.getSenderId(), message.getTimestamp());
             messageContainer.getChildren().add(dateLabel);
         }
 
@@ -121,7 +121,7 @@ public class ChatController {
         return container;
     }
 
-    private Label createDateLabel(Date timestamp) {
+    private Label createDateLabel(String username, Date timestamp) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timestamp);
         String time = String.format("%02d:%02d",
@@ -132,7 +132,7 @@ public class ChatController {
                 calendar.get(Calendar.MONTH) + 1,
                 calendar.get(Calendar.YEAR));
 
-        Label dateLabel = new Label(time + " | " + formattedDate);
+        Label dateLabel = new Label(username + " | " + time + " | " + formattedDate);
         dateLabel.setStyle("-fx-text-fill: #666; -fx-font-size: 10px;");
         return dateLabel;
     }
@@ -315,7 +315,9 @@ public class ChatController {
         String chatter = usersListView.getSelectionModel().getSelectedItem().toString();
         chatterUsernameLabel.setText(chatter); // need to handle nullpointer
         messagesContainer.getChildren().clear();
-        loadMessages(messagesCallback, usernameLabel.getText(), chatter);
+//        if (!chatter.equals("General chat (With ALL users)")) {
+            loadMessages(messagesCallback, usernameLabel.getText(), chatter);
+//        }
     }
 
     private void loadMessages(MessagesCallback callback, String sender, String receiver) {
@@ -373,17 +375,30 @@ public class ChatController {
     }
 
     public void updateMessagesTextArea (ChatMessage message) {
-        String chatterId = chatterUsernameLabel.getText();
-        String myId = usernameLabel.getText();
-        if (message.getSenderId().equals(chatterId)) {
-            addReceivedMessage(message);
-        } else if (message.getReceiverId().equals(chatterId)) {
-            addSentMessage(message);
-        }
+        Platform.runLater(() -> {
+            String chatterId = chatterUsernameLabel.getText();
+            String myId = usernameLabel.getText();
 
-        if (!myId.equals(message.getSenderId()) && !usersListView.getItems().contains(message.getSenderId())) {
-            updateUsersListView(myId);
-        }
+            if (message.getReceiverId().equals("General chat (With ALL users)")
+            && chatterId.equals("General chat (With ALL users)")) {
+                if (message.getSenderId().equals(myId)) {
+                    addSentMessage(message);
+                } else {
+                    addReceivedMessage(message);
+                }
+            } else {
+                if (message.getSenderId().equals(chatterId) && message.getReceiverId().equals(myId)) {
+                    addReceivedMessage(message);
+                } else if (message.getSenderId().equals(myId) && chatterId.equals(message.getReceiverId())) {
+                    addSentMessage(message);
+                }
+            }
+
+
+            if (!myId.equals(message.getSenderId()) && !usersListView.getItems().contains(message.getSenderId())) {
+                updateUsersListView(myId);
+            }
+        });
     }
 
     public void updateUsersListView(String myUsername) {
