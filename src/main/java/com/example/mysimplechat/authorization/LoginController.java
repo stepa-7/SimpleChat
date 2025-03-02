@@ -4,22 +4,15 @@ import com.example.database.ConnectionChecker;
 import com.example.database.DatabaseUtil;
 import com.example.mysimplechat.chat.ChatController;
 import com.example.mysimplechat.chat.SimpleChat;
-import com.example.mysimplechat.chat.chatroom.ChatRoom;
 import com.example.security.SecurityUtil;
 import com.example.validation.UserValidator;
-import com.fasterxml.jackson.core.type.TypeReference;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.List;
 
 public class LoginController {
     @FXML
@@ -28,8 +21,6 @@ public class LoginController {
     private TextField loginLogin;
     @FXML
     private TextField passwordLogin;
-    @FXML
-    private Button loginButton;
 
     public TextField getPasswordLogin() {
         return passwordLogin;

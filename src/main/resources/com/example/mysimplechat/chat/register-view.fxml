@@ -12,10 +12,8 @@
             <Label alignment="TOP_LEFT" text="Enter your login:" />
             <TextField fx:id="loginRegister" promptText="Login" />
             <Label alignment="TOP_LEFT" text="Enter your password:" />
-<!--            <TextField fx:id="passwordRegister" promptText="Password" />-->
          <TextField fx:id="passwordRegister" promptText="Password" />
-<!--            <CheckBox fx:id="showPasswordCheckBox" text="Show password" />-->
-            <Button fx:id="registerButton" alignment="CENTER" onMouseClicked="#onRegisterClick" text="Register" />
+            <Button alignment="CENTER" onMouseClicked="#onRegisterClick" text="Register" />
             <Label fx:id="loginLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" onMouseClicked="#onLoginClick" text="Login" textFill="#0645ad">
             </Label>
             <padding>

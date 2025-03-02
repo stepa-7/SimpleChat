@@ -18,8 +18,6 @@ public class RegisterController {
     @FXML
     private Label loginLabel;
     @FXML
-    private Button registerButton;
-    @FXML
     private TextField usernameRegister;
     @FXML
     private TextField loginRegister;

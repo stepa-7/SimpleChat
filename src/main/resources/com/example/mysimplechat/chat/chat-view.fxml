@@ -35,8 +35,8 @@
             <!-- История сообщений -->
 
             <!-- Поле для ввода сообщения -->
-            <ScrollPane fx:id="messagesScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                <TextArea fx:id="messagesTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px;" HBox.hgrow="ALWAYS" />
+            <ScrollPane fx:id="messagesScrollPane" fitToWidth="true" fitToHeight="true" style="-fx-background: white;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="messagesContainer" style="-fx-spacing: 10; -fx-padding: 10;"/>
             </ScrollPane>
             <HBox spacing="10">
                 <TextField fx:id="typedMessageTextField" promptText="Enter your message..." style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 5px; " HBox.hgrow="ALWAYS" />

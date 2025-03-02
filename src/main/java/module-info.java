@@ -27,7 +27,6 @@ module com.example.mysimplechat {
     requires spring.tx;
     requires spring.orm;
 
-//    opens com.example.mysimplechat. to javafx.fxml;
     exports com.example.security;
     exports com.example.database;
     exports com.example.validation;
@@ -50,10 +49,4 @@ module com.example.mysimplechat {
             spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
     opens com.example.mysimplechat.chat.chatmessage to javafx.fxml, spring.core, spring.beans, spring.data.jpa,
             spring.context, com.fasterxml.jackson.databind, org.hibernate.orm.core;
-
-//    opens com.example.mysimplechat.chat to javafx.fxml, spring.core, spring.beans, spring.context, spring.messaging;
-
-
-//    opens com.example.mysimplechat.chat to spring.core;
-//    opens com.example.mysimplechat.authorization to spring.core;
 }

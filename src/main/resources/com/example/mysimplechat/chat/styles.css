@@ -1,3 +1,40 @@
+/* Стиль для общей области сообщений */
+#messagesContainer {
+    -fx-background-color: white; /* Фон всей области чата */
+    -fx-border-radius: 5px;
+    -fx-border-color: #ccc;
+}
+
+/* Стиль для ScrollPane (прозрачный фон) */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+/* Стили для сообщений */
+.message-bubble {
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #d1d1d1;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-max-width: 400px;
+}
+
+.message-received {
+    -fx-background-color: #ffffff; /* Белый фон для входящих */
+}
+
+.message-sent {
+    -fx-background-color: #dcf8c6; /* Зеленый фон для исходящих */
+}
+
+
+
+
+
 /* Общий стиль для всей сцены */
 .root {
     -fx-background-color: #f4f4f4;

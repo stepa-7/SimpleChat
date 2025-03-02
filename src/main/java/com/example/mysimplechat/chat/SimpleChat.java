@@ -1,18 +1,11 @@
 package com.example.mysimplechat.chat;
 
-import com.example.mysimplechat.chat.chatroom.ChatRoom;
-import com.example.mysimplechat.chat.chatroom.ChatRoomService;
-import jakarta.annotation.PostConstruct;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SimpleChat extends Application {
     @Override
@@ -22,6 +15,10 @@ public class SimpleChat extends Application {
         stage.setTitle("Chat");
         stage.setScene(scene);
         stage.show();
+
+        stage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
     }
 
     @Override
@@ -34,10 +31,7 @@ public class SimpleChat extends Application {
         super.init();
     }
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) {
         launch(args);
-
-//        ChatStompClient chatStompClient = new ChatStompClient("stepa177");
-//        chatStompClient.sendMessage(new ChatMessage("stepa177", "Hello world", ""));
     }
 }

@@ -2,10 +2,8 @@ package com.example.mysimplechat.chat;
 
 import com.example.mysimplechat.chat.chatmessage.ChatMessage;
 import com.example.mysimplechat.chat.chatmessage.ChatMessageRepository;
-import com.example.mysimplechat.chat.chatmessage.ChatMessageService;
 import com.example.mysimplechat.chat.chatroom.ChatRoom;
 import com.example.mysimplechat.chat.chatroom.ChatRoomRepository;
-import com.example.mysimplechat.chat.chatroom.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

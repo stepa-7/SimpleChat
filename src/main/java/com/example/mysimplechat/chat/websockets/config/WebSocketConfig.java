@@ -20,6 +20,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/topic", "/queue"); // user subscribes to /topic and /queue to receive messages from the server
         registry.setApplicationDestinationPrefixes("/app"); // user sends messages to /app
         registry.setUserDestinationPrefix("/user");
-//        registry.setUserDestinationPrefix("/user");
     }
 }

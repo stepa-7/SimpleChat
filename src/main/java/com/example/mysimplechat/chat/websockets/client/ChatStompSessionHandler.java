@@ -58,7 +58,6 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
                 });
         System.out.println("Client subscribed to /topic/messages");
         System.out.println("Client subscribed to /user/queue/messages");
-//        System.out.println("Client subscribed to /user/queue/messages");
     }
 
     @Override

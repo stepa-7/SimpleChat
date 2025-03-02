@@ -17,18 +17,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextFlow;
+import javafx.scene.layout.*;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +44,114 @@ public class ChatController {
     @FXML
     private ListView usersListView;
     @FXML
-    private TextArea messagesTextArea;
-    @FXML
     private TextField typedMessageTextField;
     @FXML
     private ScrollPane messagesScrollPane;
+
+    @FXML
+    private VBox messagesContainer;
+
+    // Добавить сообщение от собеседника (слева)
+    public void addReceivedMessage(ChatMessage message) {
+        HBox messageBox = createMessageBox(message, false);
+        messagesContainer.getChildren().add(messageBox);
+        scrollToBottom();
+    }
+
+    // Добавить ваше сообщение (справа)
+    public void addSentMessage(ChatMessage message) {
+        HBox messageBox = createMessageBox(message, true);
+        messagesContainer.getChildren().add(messageBox);
+        scrollToBottom();
+    }
+
+
+    private HBox createMessageBox(ChatMessage message, boolean isSent) {
+        VBox messageContainer = new VBox();
+        messageContainer.setAlignment(isSent ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        messageContainer.setFillWidth(false);
+
+        // Дата и время
+        if (message.getTimestamp() != null) {
+            Label dateLabel = createDateLabel(message.getTimestamp());
+            messageContainer.getChildren().add(dateLabel);
+        }
+
+        // Текст сообщения
+        TextFlow textFlow = new TextFlow(new Text(message.getMessage()));
+        textFlow.setStyle(
+                "-fx-background-color: " + (isSent ? "#DCF8C6" : "#FFFFFF") + ";" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-border-color: #ccc;" +
+                        "-fx-padding: 8;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-text-fill: #333;"
+        );
+
+        // Настройки ширины
+        textFlow.setMaxWidth(Region.USE_PREF_SIZE);
+        textFlow.maxWidthProperty().bind(
+                messagesScrollPane.widthProperty().multiply(0.7)
+        );
+
+        // Добавляем обработчик для выделения текста
+        textFlow.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Двойной клик для выделения
+                Clipboard clipboard = Clipboard.getSystemClipboard();
+                ClipboardContent content = new ClipboardContent();
+                StringBuilder textContent = new StringBuilder();
+                for (Node node : textFlow.getChildren()) {
+                    if (node instanceof Text) {
+                        textContent.append(((Text) node).getText());
+                    }
+                }
+                content.putString(textContent.toString());
+                clipboard.setContent(content);
+            }
+        });
+
+        messageContainer.getChildren().add(textFlow);
+        HBox container = new HBox(messageContainer);
+        container.setAlignment(isSent ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+
+        // Выравнивание содержимого HBox
+        HBox.setHgrow(messageContainer, Priority.NEVER);
+
+        return container;
+    }
+
+    private Label createDateLabel(Date timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        String time = String.format("%02d:%02d",
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE));
+        String formattedDate = String.format("%02d.%02d.%04d",
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.YEAR));
+
+        Label dateLabel = new Label(time + " | " + formattedDate);
+        dateLabel.setStyle("-fx-text-fill: #666; -fx-font-size: 10px;");
+        return dateLabel;
+    }
+
+    // Автопрокрутка вниз
+    private void scrollToBottom() {
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(100); // Задержка 100 мс
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(() -> messagesScrollPane.setVvalue(1.0));
+        });
+        thread.start();
+        Platform.runLater(() -> {
+            messagesScrollPane.setVvalue(1.0);
+        });
+    }
 
 
     MessagesCallback messagesCallback = new MessagesCallback() {
@@ -63,7 +167,6 @@ public class ChatController {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-//                    Platform.runLater(() -> messagesTextArea.setScrollTop(Double.MAX_VALUE));
                 }).start();
             });
         }
@@ -114,7 +217,7 @@ public class ChatController {
         stage.show();
     }
 
-    public void onAddChatClick(MouseEvent mouseEvent) throws Exception {
+    public void onAddChatClick(MouseEvent mouseEvent) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Enter username");
 
@@ -172,7 +275,7 @@ public class ChatController {
         });
 
         usersListView.getSelectionModel().select(chatterUsernameLabel.getText());
-        messagesTextArea.clear();
+        messagesContainer.getChildren().clear();
         loadMessages(messagesCallback, usernameLabel.getText(), chatterUsernameLabel.getText());
     }
 
@@ -211,7 +314,7 @@ public class ChatController {
         }
         String chatter = usersListView.getSelectionModel().getSelectedItem().toString();
         chatterUsernameLabel.setText(chatter); // need to handle nullpointer
-        messagesTextArea.clear();
+        messagesContainer.getChildren().clear();
         loadMessages(messagesCallback, usernameLabel.getText(), chatter);
     }
 
@@ -235,16 +338,11 @@ public class ChatController {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 callback.onError(e);
-//                call.cancel();
             }
         });
-//        if (call.isCanceled()) {
-//
-//        }
     }
 
     public void onSendClick(MouseEvent mouseEvent) {
-//        chatClient = new ChatStompClient(chatterUsernameLabel.getText());
         String message = typedMessageTextField.getText();
         if (message.isEmpty()) {
             return;
@@ -277,25 +375,10 @@ public class ChatController {
     public void updateMessagesTextArea (ChatMessage message) {
         String chatterId = chatterUsernameLabel.getText();
         String myId = usernameLabel.getText();
-        if (message.getSenderId().equals(chatterId)
-//                || (message.getReceiverId().equals(chatterId) && message.getSenderId().equals(myId))
-                || (message.getReceiverId().equals(chatterId))) {
-//            double scrollPosition = messagesScrollPane.getVvalue();
-            Date date = message.getTimestamp();
-            if (date != null) {
-                messagesTextArea.appendText(date.toString() + '\n');
-            }
-            messagesTextArea.appendText(message.getSenderId() + '\n' + message.getMessage() + '\n' + '\n');
-
-//            new Thread(() -> {
-//                try {
-//                    Thread.sleep(100); // Задержка 100 мс
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Platform.runLater(() -> messagesTextArea.setScrollTop(scrollPosition));
-////                Platform.runLater(() -> messagesScrollPane.setVvalue(scrollPosition));
-//            }).start();
+        if (message.getSenderId().equals(chatterId)) {
+            addReceivedMessage(message);
+        } else if (message.getReceiverId().equals(chatterId)) {
+            addSentMessage(message);
         }
 
         if (!myId.equals(message.getSenderId()) && !usersListView.getItems().contains(message.getSenderId())) {
@@ -311,11 +394,6 @@ public class ChatController {
                     for (ChatRoom room : chatRooms) {
                         String sender = room.getSenderId();
                         String receiver = room.getReceiverId();
-//                        if (sender.equals(myUsername) && !(receiver.equals(myUsername))) {
-//                            if (!usersListView.getItems().contains(receiver)) {
-//                                usersListView.getItems().add(receiver);
-//                            }
-//                        } else if (receiver.equals(myUsername) && !(sender.equals(myUsername))) {
                         if (receiver.equals(myUsername) && !(sender.equals(myUsername))) {
                             if (!usersListView.getItems().contains(sender)) {
                                 usersListView.getItems().add(sender);

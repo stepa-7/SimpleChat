@@ -1,6 +1,5 @@
 package com.example.mysimplechat.chat.websockets;
 
-import com.example.mysimplechat.chat.ChatController;
 import com.example.mysimplechat.chat.ChatService;
 import com.example.mysimplechat.chat.chatmessage.ChatMessage;
 import com.example.mysimplechat.chat.chatmessage.ChatMessageService;
@@ -23,20 +22,6 @@ public class ChatWebsocketController {
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
 
-
-    @GetMapping("/chat-rooms")
-    @ResponseBody
-    public List<ChatRoom> getChatRooms() {
-        return chatRoomService.getRoomList();
-    }
-
-    @PostMapping("/delete-room")
-    @ResponseBody
-    public ResponseEntity<String> deleteRoom (@RequestParam String receiverId, @RequestParam String senderId) {
-        chatRoomService.deleteRoomByReceiverId(receiverId, senderId);
-        return ResponseEntity.ok("Chat deleted successfully");
-    }
-
     @Autowired
     public ChatWebsocketController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService, ChatRoomService chatRoomService, ChatService chatService) {
         this.messagingTemplate = messagingTemplate;
@@ -45,12 +30,25 @@ public class ChatWebsocketController {
         this.chatService = chatService;
     }
 
+    @GetMapping("/chat-rooms")
+    @ResponseBody
+    public List<ChatRoom> getChatRooms() {
+        return chatRoomService.getRoomList();
+    }
+
     @GetMapping("/messages/{senderId}/{receiverId}")
     public ResponseEntity<List<ChatMessage>> findChatMessages(
             @PathVariable String senderId,
             @PathVariable String receiverId
     ) {
         return ResponseEntity.ok(chatService.findChatMessages(senderId, receiverId, true));
+    }
+
+    @PostMapping("/delete-room")
+    @ResponseBody
+    public ResponseEntity<String> deleteRoom (@RequestParam String receiverId, @RequestParam String senderId) {
+        chatRoomService.deleteRoomByReceiverId(receiverId, senderId);
+        return ResponseEntity.ok("Chat deleted successfully");
     }
 
     // User sends a message to the server to /app/private-message

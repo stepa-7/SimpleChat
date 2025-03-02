@@ -1,12 +1,8 @@
 package com.example.mysimplechat.chat.chatmessage;
 
 import com.example.mysimplechat.chat.ChatService;
-import com.example.mysimplechat.chat.chatroom.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ChatMessageService {
@@ -24,9 +20,4 @@ public class ChatMessageService {
         chatMessage.setChatId(chatRoomId);
         return repository.save(chatMessage);
     }
-
-//    public List<ChatMessage> findChatMessages(String senderId, String receiverId) {
-//        var chatId = chatService.getChatRoomId(senderId, receiverId, false);
-//        return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
-//    }
 }

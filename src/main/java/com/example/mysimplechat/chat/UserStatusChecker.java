@@ -5,7 +5,6 @@ import jakarta.annotation.PreDestroy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -23,7 +22,6 @@ public class UserStatusChecker {
             stmt.executeUpdate();
             System.out.println("Updated users connection status");
         } catch (Exception e) {
-//            System.out.println("Check your database connection!");
             e.printStackTrace();
         }
     }

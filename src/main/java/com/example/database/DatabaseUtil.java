@@ -10,12 +10,10 @@ import com.example.mysimplechat.chat.SimpleChat;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
 public class DatabaseUtil {
-//    private static final String URL = "jdbc:postgresql://192.168.28.124:5432/chatDB";
     private static final String URL = "jdbc:postgresql://192.168.1.5:5432/chatDB";
     private static final String USER = "chat_client";
     private static final String PASSWORD = "client_password";
