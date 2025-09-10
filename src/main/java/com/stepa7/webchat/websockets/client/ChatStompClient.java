@@ -1,5 +1,6 @@
 package com.stepa7.webchat.websockets.client;
 
+import com.stepa7.webchat.model.entity.Message;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -16,16 +17,14 @@ import java.util.concurrent.ExecutionException;
 public class ChatStompClient {
     private StompSession session;
     private final String username;
-    private final ChatController chatController;
 
     private final WebSocketStompClient stompClient;
     private final String url;
     private final ChatStompSessionHandler sessionHandler;
     private final StompHeaders headers;
 
-    public ChatStompClient(String username, ChatController chatController) throws ExecutionException, InterruptedException {
+    public ChatStompClient(String username) throws ExecutionException, InterruptedException {
         this.username = username;
-        this.chatController = chatController;
 
         List<Transport> transports = new ArrayList<>();
         transports.add(new WebSocketTransport(new StandardWebSocketClient()));
@@ -33,7 +32,7 @@ public class ChatStompClient {
         SockJsClient sockJsClient = new SockJsClient(transports);
         stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter()); // To serialize and deserialize messages into json
-        sessionHandler = new ChatStompSessionHandler(username, chatController);
+        sessionHandler = new ChatStompSessionHandler(username);
         url = "ws://localhost:8080/chat?username=" + username;
 
         headers = new StompHeaders();
@@ -60,12 +59,12 @@ public class ChatStompClient {
         System.out.println("Connected to server");
     }
 
-    public void sendMessage(ChatMessage message) {
+    public void sendMessage(Message message) {
         session.send("/app/broadcast-message", message); // Connected to controller
         System.out.println("Message sent: " + message.getMessage());
     }
 
-    public void sendPrivateMessage(ChatMessage message) {
+    public void sendPrivateMessage(Message message) {
         session.send("/app/private-message", message); // Connected to controller
         System.out.println("Message sent: " + message.getMessage());
     }

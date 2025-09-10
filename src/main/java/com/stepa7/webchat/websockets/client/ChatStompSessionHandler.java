@@ -1,7 +1,6 @@
 package com.stepa7.webchat.websockets.client;
 
-import com.example.mysimplechat.chat.ChatController;
-import com.example.mysimplechat.chat.chatmessage.ChatMessage;
+import com.stepa7.webchat.model.entity.Message;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -11,12 +10,10 @@ import java.lang.reflect.Type;
 
 public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
     private final String username;
-    private final ChatController chatController;
 
 
-    public ChatStompSessionHandler(String username, ChatController chatController) {
+    public ChatStompSessionHandler(String username) {
         this.username = username;
-        this.chatController = chatController;
     }
 
     @Override
@@ -25,14 +22,14 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
         session.subscribe("/topic/messages", new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
-                return ChatMessage.class; // Convert incoming json data into a message object
+                return Message.class; // Convert incoming json data into a message object
             }
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                if (payload instanceof ChatMessage) {
-                    ChatMessage message = (ChatMessage) payload;
-                    chatController.updateMessagesTextArea(message);
+                if (payload instanceof Message) {
+                    Message message = (Message) payload;
+//                    chatController.updateMessagesTextArea(message);
                     System.out.println("Received message: " + message.getSenderId() + ": " + message.getMessage());
                 } else {
                     System.out.println("Received unexpected message type: " + payload.getClass());
@@ -42,14 +39,14 @@ public class ChatStompSessionHandler extends StompSessionHandlerAdapter {
         session.subscribe("/user/queue/messages", new StompFrameHandler() {
                     @Override
                     public Type getPayloadType(StompHeaders headers) {
-                        return ChatMessage.class;
+                        return Message.class;
                     }
 
                     @Override
                     public void handleFrame(StompHeaders headers, Object payload) {
-                        if (payload instanceof ChatMessage) {
-                            ChatMessage message = (ChatMessage) payload;
-                            chatController.updateMessagesTextArea(message);
+                        if (payload instanceof Message) {
+                            Message message = (Message) payload;
+//                            chatController.updateMessagesTextArea(message);
                             System.out.println("Received message: " + message.getSenderId() + ": " + message.getMessage());
                         } else {
                             System.out.println("Received unexpected message type: " + payload.getClass());
