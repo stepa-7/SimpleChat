@@ -2,9 +2,8 @@ package com.stepa7.webchat.controller;
 
 import com.stepa7.webchat.model.entity.Message;
 import com.stepa7.webchat.model.entity.Room;
-import com.stepa7.webchat.service.impl.ChatService;
-import com.stepa7.webchat.service.impl.MessageServiceImpl;
-import com.stepa7.webchat.service.impl.RoomServiceImpl;
+import com.stepa7.webchat.service.MessageService;
+import com.stepa7.webchat.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,9 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebsocketController {
     private final SimpMessagingTemplate messagingTemplate; // Websocket use this to send messages to users
-    private final MessageServiceImpl messageService;
-    private final RoomServiceImpl roomService;
-    private final ChatService chatService;
+    private final MessageService messageService;
+    private final RoomService roomService;
 
     @GetMapping("/chat-rooms")
     @ResponseBody
@@ -34,7 +32,7 @@ public class WebsocketController {
             @PathVariable String senderId,
             @PathVariable String receiverId
     ) {
-        return ResponseEntity.ok(chatService.findChatMessages(senderId, receiverId, true));
+        return ResponseEntity.ok(roomService.findChatMessages(senderId, receiverId, true));
     }
 
     @PostMapping("/delete-room")

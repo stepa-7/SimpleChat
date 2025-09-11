@@ -1,44 +1,27 @@
 package com.stepa7.webchat.websockets.client;
 
 import com.stepa7.webchat.model.entity.Message;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
-import org.springframework.web.socket.sockjs.client.SockJsClient;
-import org.springframework.web.socket.sockjs.client.Transport;
-import org.springframework.web.socket.sockjs.client.WebSocketTransport;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ChatStompClient {
     private StompSession session;
     private final String username;
-
-    private final WebSocketStompClient stompClient;
     private final String url;
+    private final WebSocketStompClient stompClient;
     private final ChatStompSessionHandler sessionHandler;
-    private final StompHeaders headers;
 
-    public ChatStompClient(String username) throws ExecutionException, InterruptedException {
+    public ChatStompClient(String username,
+                           String serverUrl,
+                           WebSocketStompClient stompClient,
+                           ChatStompSessionHandler sessionHandler) {
         this.username = username;
-
-        List<Transport> transports = new ArrayList<>();
-        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-
-        SockJsClient sockJsClient = new SockJsClient(transports);
-        stompClient = new WebSocketStompClient(sockJsClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter()); // To serialize and deserialize messages into json
-        sessionHandler = new ChatStompSessionHandler(username);
-        url = "ws://localhost:8080/chat?username=" + username;
-
-        headers = new StompHeaders();
-        headers.add("username", username); // Передаем username в заголовках
-
-        this.connect();
+        this.stompClient = stompClient;
+        this.sessionHandler = sessionHandler;
+        this.url = serverUrl + "?username=" + username;
+//        url = "ws://localhost:8080/chat?username=" + username;
     }
 
     public void disconnect() {
@@ -55,6 +38,10 @@ public class ChatStompClient {
             System.out.println("Already connected to server");
             return;
         }
+
+        StompHeaders headers = new StompHeaders();
+        headers.add("username", username); // Передаем username в заголовках
+
         session = stompClient.connectAsync(url, sessionHandler, headers).get();
         System.out.println("Connected to server");
     }

@@ -2,7 +2,7 @@ package com.stepa7.webchat.controller;
 
 import com.stepa7.webchat.model.dto.SigninDto;
 import com.stepa7.webchat.model.dto.SignupDto;
-import com.stepa7.webchat.service.impl.SecurityServiceImpl;
+import com.stepa7.webchat.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class SecurityController {
-    private final SecurityServiceImpl securityService;
+    private final SecurityService securityService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupDto signupDto) {
@@ -37,5 +37,11 @@ public class SecurityController {
             return ResponseEntity.ok(Map.of("signin", "success"));
         }
         return ResponseEntity.badRequest().body(result);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        securityService.logoutUser();
+        return ResponseEntity.ok(Map.of("logout", "success"));
     }
 }
